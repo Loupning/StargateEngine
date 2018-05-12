@@ -8,11 +8,6 @@ local stargate, dhd, node = require(API.Private.Stargate), require(API.Private.D
 --Networking object
 local RemoteEvent = Instance.new("RemoteEvent", game.ReplicatedStorage.Stargate_Network)
 local RemoteFunction = Instance.new("RemoteFunction", game.ReplicatedStorage.Stargate_Network)
---AddressBook/ModelPath/etc, referenced via their address/ModelPath/etc which reference to the master register. Goal is to reduce ammount of loops.
-local addressBook = {} --addressBook["[12][3][5][11][7][8][9]" or "123511789"] = register.StargateX
-local modelPath = {} --modelPath[workspace.Stargate] = register.StargateX
-local networkNode = {} --Hold tables of all networkNode in the stargate network and contain them together, lowering the ammount of object to loop through
-local galaxyNode = {} --Same has networkNode but for the galaxyNode their part of.
 
 local CollectionService = game:GetService("CollectionService")
 
