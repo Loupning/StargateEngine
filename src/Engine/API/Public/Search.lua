@@ -3,9 +3,7 @@ local node = require(API.Private.Node)
 
 return function(by, input, ...)
 	if string.lower(by) == "address" then
-		if type(addressBook[input]) == "table" then
-			
-		elseif node.addressBook[input] then
+		if node.addressBook[input] then
 			return node.addressBook[input]
 		end
 	elseif string.lower(by) == "model" then
