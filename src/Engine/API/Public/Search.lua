@@ -3,10 +3,10 @@ local node = require(API.Private.Node)
 
 return function(by, input, ...)
 	if string.lower(by) == "address" then
-		if node.addressBook[input] then
-			return node.addressBook[input]
-		--elseif type(addressBook[input]) == "table" then
+		if type(addressBook[input]) == "table" then
 			
+		elseif node.addressBook[input] then
+			return node.addressBook[input]
 		end
 	elseif string.lower(by) == "model" then
 		if node.modelPath[input] then
@@ -35,6 +35,19 @@ return function(by, input, ...)
 		
 		table.sort(dist)
 		return closest[dist[1]] -- Return the true closest gate.
+	--Return a table of all existing and known registered Stargate within the Framework.
+	elseif string.lower(by) == "allGate" then
+		local allGate = {}
+		for _, gate in pairs(node.rawRegistery) do
+			if gate.Id then if gate.Id == "Stargate" then table.insert(allGate, gate) end
+		end
+		return allGate
+	elseif string.lower(by) == "allDHD" then
+		local allDHD = {}
+		for _, dhd in pairs(node.rawRegistery) do
+			if dhd.Id then if dhd.Id == "DHD" then table.insert(allDHD, dhd) end
+		end
+		return allDHD
 	end
 	return false
 end
