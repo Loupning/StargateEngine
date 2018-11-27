@@ -37,13 +37,13 @@ return function(by, input, ...)
 	elseif string.lower(by) == "allGate" then
 		local allGate = {}
 		for _, gate in pairs(node.rawRegistery) do
-			if gate.Id then if gate.Id == "Stargate" then table.insert(allGate, gate) end
+			if gate.Id then if gate.Id == "Stargate" then table.insert(allGate, gate) end end
 		end
 		return allGate
 	elseif string.lower(by) == "allDHD" then
 		local allDHD = {}
 		for _, dhd in pairs(node.rawRegistery) do
-			if dhd.Id then if dhd.Id == "DHD" then table.insert(allDHD, dhd) end
+			if dhd.Id then if dhd.Id == "DHD" then table.insert(allDHD, dhd) end end
 		end
 		return allDHD
 	end

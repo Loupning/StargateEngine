@@ -2,31 +2,14 @@
 --Version: Sau
 --By: Loupning
 
---Master Registery of Stargates, hold all information of any gate.
-local API = script.Parent.API
-local stargate, dhd, node = require(API.Private.Stargate), require(API.Private.DHD), require(API.Private.Node)
 --Networking object
 local RemoteEvent = Instance.new("RemoteEvent", game.ReplicatedStorage.Stargate_Network)
 local RemoteFunction = Instance.new("RemoteFunction", game.ReplicatedStorage.Stargate_Network)
+--Master Registery of Stargates, hold all information of any gate.
+local API = script.Parent.API
+local stargate, dhd, node = require(API.Private.Stargate), require(API.Private.DHD), require(API.Private.Node)
 
 local CollectionService = game:GetService("CollectionService")
-
-------------------------------
------- CoreFunction ------
-------------------------------
---change the function to instead return an unalternated string of 7, 8 address lenght for the addressBook.
-
-
---[[local function registerAddress(address, gate)
-	
-end]]
-
-
-------------------------------
-  ----- Core Registery -----
-------------------------------
-
-local registery = {}
 
 local gateAddedSignal = CollectionService:GetInstanceAddedSignal("~$Stargate")
 local gateRemovedSignal = CollectionService:GetInstanceRemovedSignal("~$Stargate")
@@ -38,13 +21,13 @@ local dhdRemovedSignal = CollectionService:GetInstanceRemovedSignal("~$DHD")
 
 local function onGateAdded(gate)
 	local data = require(gate.Data) -- Load the gate's configuration.
-	registery[gate] = stargate.new(data, gate)
+	node.rawRegistery[gate] = stargate.new(data, gate)
 end
 
 local function onGateRemoved(gate)
-	if registery[gate] then
-		registery[gate]:Destroy()
-		registery[gate] = nil
+	if node.rawRegistery[gate] then
+		node.rawRegistery[gate]:Destroy()
+		node.rawRegistery[gate] = nil
 	end
 end
 
@@ -52,13 +35,13 @@ end
 
 local function onDhdAdded(dhd)
 	local data = require(dhd.Data) -- Load the gate's configuration.
-	registery[dhd] = dhd.new(data)
+	node.rawRegistery[dhd] = dhd.new(data)
 end
 
 local function onDhdRemoved(dhd)
-	if registery[dhd] then
-		registery[dhd]:Destroy()
-		registery[dhd] = nil
+	if node.rawRegistery[dhd] then
+		node.rawRegistery[dhd]:Destroy()
+		node.rawRegistery[dhd] = nil
 	end
 end
 

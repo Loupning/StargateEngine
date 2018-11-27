@@ -1,17 +1,22 @@
 local API = script.Parent.Parent
 local node = require(API.Private.Node)
+local readAddress = require(API.Private.Address)
 
 local stargate = {}
 stargate.__index = stargate
 
 function stargate.new(data, model)
 	local self = {}
+
+	self.Id = "Stargate"
+
 	self.Address = data.Address
 	self.Network = data.Network
-	--self.Galaxy = data.Galaxy
+	self.Galaxy = data.Galaxy
 	
 	self.Type = data.Type
-	
+	self.DHDs = {};
+
 	------------------------------
 	  ----- States Handler -----
 	------------------------------
@@ -70,6 +75,7 @@ function stargate.new(data, model)
 	})
 	
 	self.State.new("Enabled", false, {true, false})
+	--self.State:Listen("Enabled", self:Wormhole)
 	
 	------------------------------
 	 ----- Connection Event -----
@@ -95,8 +101,6 @@ function stargate.new(data, model)
 		self.connectedTo = address
 		--set active
 		self.State:Set("Enabled", true)
-		--activate gate
-		self:Wormhole()
 	end
 	
 	self.OverrideWormhole = nil
@@ -118,25 +122,29 @@ function stargate.new(data, model)
 	
 	self.Model = model
 	
-	local address7, address8 = require(API.Private.Address)(data.Address)	
+	local address7, address8 = readAddress(data.Address)	
 	
-	node.addressBook[address7] = self --7 Symbol -- BAD METHOD NEED TO REWORK perhaps I could link all same address within a table. 
-	node.addressBook[address8] = self --8 Symbol
-	node.addressBook[data.Address] = self --9 Symbol
-	node.modelPath[model] = self
+	node.addressBook:Add(address7, self) --7 Symbol -- BAD METHOD NEED TO REWORK perhaps I could link all same address within a table.
+	node.addressBook:Add(address8, self) --8 Symbol
+	node.addressBook:Add(data.Address, self) --9 Symbol
+	node.modelPath:Add(model, self)
 	--Need to rework the network and galaxy node to be relied between themself and internal.
-	node.networkNode[data.Network] = self -- if network is set but galaxy isn't ignore the networkNode.
-	node.galaxyNode[data.Galaxy] = self
+	node.Network:Add(data.Network, self) -- if network is set but galaxy isn't ignore the networkNode.
+	node.Galaxy:Add(data.Galaxy, self)
 	
 	return setmetatable(self, stargate)
 end
 
 function stargate:Destroy()
 	--Destroy reference to the gate
-	node.addressBook[readAddress(self.Address)] = nil
-	node.modelPath[self.Model] = nil
-	node.networkNode[self.Network] = nil
-	node.galaxyNode[self.Galaxy] = nil
+	local address7, address8 = readAddress(self.Address)
+
+	node.addressBook:Remove(address7, self)
+	node.addressBook:Remove(address8, self)
+	node.addressBook:Remove(self.Address, self)
+	node.modelPath:Remove(self.Model)
+	node.Network:Remove(self.Network, self)
+	node.Galaxy:Remove(self.Galaxy, self)
 	
 	self = nil -- Destroy all the data.
 end
